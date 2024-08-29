@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from user_management.models import Teacher
 
 
 # Create your models here.
@@ -22,6 +23,7 @@ class Questions(models.Model):
     marks = models.PositiveIntegerField()
     # timestamp when the question was created
     created_at=models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='questions',null=True)
     
     
     def __str__(self):
