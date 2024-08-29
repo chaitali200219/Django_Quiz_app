@@ -12,7 +12,7 @@ class Teacher(models.Model):
             
             
     def __str__(self):
-        return self.user.first_name
+        return self.user.username 
     
 
 
@@ -21,7 +21,7 @@ class Student(models.Model):
     grade = models.CharField(max_length=25)
     
     def __str__(self):
-        return self.user.first_name
+        return self.user.username 
     
     def save(self, *args, **kwargs):
         if Student.objects.filter(user=self.user).exists():

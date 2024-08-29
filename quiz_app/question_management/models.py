@@ -24,7 +24,7 @@ class Questions(models.Model):
     # timestamp when the question was created
     created_at=models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='questions',null=True)
-    
+
     
     def __str__(self):
         return self.content
