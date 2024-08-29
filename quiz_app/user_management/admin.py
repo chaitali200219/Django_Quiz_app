@@ -25,4 +25,8 @@ class StudentAdmin(admin.ModelAdmin):
 
     def get_user_username(self, obj):
         return obj.user.username
+<<<<<<< HEAD
     get_user_username.short_description = 'Username'
+=======
+    get_user_username.short_description = 'Username'
+>>>>>>> ba9d4efc81d070a870f7f604bf24fc8901a2f202
