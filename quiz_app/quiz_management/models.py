@@ -3,6 +3,7 @@ from question_management.models import Questions
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from user_management.models import Teacher
 
 class Quiz(models.Model):
     STATUS_CHOICES = [
@@ -15,6 +16,7 @@ class Quiz(models.Model):
 
     status = models.BooleanField(choices=STATUS_CHOICES, default=True)
     created_at = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='quiz',null=True)
     
     # Linking Quiz to Questions
     questions = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name="quiz")

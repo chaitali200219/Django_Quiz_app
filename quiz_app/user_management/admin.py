@@ -3,5 +3,32 @@ from .models import Teacher, Student
 
 # Register your models here.
 
-admin.site.register(Teacher)
-admin.site.register(Student)
+
+@admin.register(Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ('get_user_id', 'get_user_username')
+
+    def get_user_id(self, obj):
+        return obj.user.id
+    get_user_id.short_description = 'User ID'
+
+    def get_user_username(self, obj):
+        return obj.user.username
+    get_user_username.short_description = 'Username'
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('get_user_id', 'get_user_username')
+
+    def get_user_id(self, obj):
+        return obj.user.id
+    get_user_id.short_description = 'User ID'
+
+    def get_user_username(self, obj):
+        return obj.user.username
+
+    get_user_username.short_description = 'Username'
+
+    get_user_username.short_description = 'Username'
+
+

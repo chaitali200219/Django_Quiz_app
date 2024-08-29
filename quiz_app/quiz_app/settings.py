@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'quiz_management',
     'user_management',
     'django_extensions',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
