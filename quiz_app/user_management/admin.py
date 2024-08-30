@@ -3,6 +3,7 @@ from .models import Teacher, Student
 
 # Register your models here.
 
+
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ('get_user_id', 'get_user_username')
@@ -29,4 +30,5 @@ class StudentAdmin(admin.ModelAdmin):
     get_user_username.short_description = 'Username'
 
     get_user_username.short_description = 'Username'
+
 
