@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'question_management',
     'quiz_management',
+    'user_management',
+    'answer_submission',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
