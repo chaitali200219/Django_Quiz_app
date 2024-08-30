@@ -5,6 +5,6 @@ from .models import AnswerSubmission
 
 @admin.register(AnswerSubmission)
 class AnswerAubmissionAdmin(admin.ModelAdmin):
-    list_display = ('student', 'option', 'status')
+    list_display = ('student', 'option', 'status','is_correct')
 
 

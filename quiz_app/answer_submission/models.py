@@ -12,8 +12,13 @@ class AnswerSubmission(models.Model):
     is_correct = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=[('submitted', 'Submitted'), ('pending', 'Pending')], default='pending')
 
+    def save(self, *args, **kwargs):
+        # Automatically set is_correct based on the linked option
+        self.is_correct = self.option.is_correct
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.student} - {self.quiz} - {self.status}"
+        return f"{self.student} - {self.quiz} - {self.status} - Correct: {self.is_correct}"
 
     class Meta:
         unique_together = ('quiz', 'student', 'option')
