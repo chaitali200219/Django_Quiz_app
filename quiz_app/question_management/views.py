@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 # from rest_framework.permissions import IsAuthenticated
-from .models import Questions
-from .serializers import QuestionsSerializer
+from .models import Questions,Tag
+from .serializers import QuestionsSerializer,TagSerializer
 
 class TeacherQuestionsListView(generics.ListAPIView):
     serializer_class = QuestionsSerializer
@@ -33,4 +33,14 @@ class QuestionUpdateView(generics.UpdateAPIView):
 
 class QuestionDeleteView(generics.DestroyAPIView):
     queryset = Questions.objects.all()
-    serializer_class = QuestionsSerializer    
+    serializer_class = QuestionsSerializer   
+    
+# List all tags or create a new tag
+class TagListCreateView(generics.ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+# Retrieve, update or delete a specific tag
+class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer     
