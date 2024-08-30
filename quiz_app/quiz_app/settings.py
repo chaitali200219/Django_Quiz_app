@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'answer_submission',
     'django_extensions',
     'rest_framework',
+    'results_management',
 ]
 
 MIDDLEWARE = [

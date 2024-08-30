@@ -1,5 +1,3 @@
-# results_management/models.py
-
 from django.db import models
 from django.contrib.auth.models import User
 from quiz_management.models import Quiz
@@ -24,3 +22,6 @@ class QuestionResult(models.Model):
 
     def __str__(self):
         return f"{self.quiz_result.student.full_name} - {self.question.content} - {'Correct' if self.is_correct else 'Incorrect'}"
+
+    class Meta:
+        unique_together = ('quiz_result', 'question', 'selected_option')  # Prevent duplicates
