@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import QuizResult, QuestionResult
+from .models import QuizResult
 
-admin.site.register(QuizResult)
-admin.site.register(QuestionResult)
+@admin.register(QuizResult)
+class QuizResultAdmin(admin.ModelAdmin):
+    list_display = ('student', 'quiz', 'score', 'date_taken')
