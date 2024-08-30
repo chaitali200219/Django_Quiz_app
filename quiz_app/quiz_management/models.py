@@ -19,7 +19,7 @@ class Quiz(models.Model):
     created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='quiz',null=True)
     
     # Linking Quiz to Questions
-    questions = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name="quiz")
+    questions = models.ManyToManyField(Questions,related_name="quiz")
 
     def __str__(self):
         return self.title
