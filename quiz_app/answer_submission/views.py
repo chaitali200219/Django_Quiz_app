@@ -1,15 +1,13 @@
-from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import AnswerSubmission
-from .serializers import QuizSubmissionSerializer
-from django.db.models import Count
+from .serializers import StudentSerializer
 
-class QuizSubmissionView(generics.ListAPIView):
-    serializer_class = QuizSubmissionSerializer
-
-    def get_queryset(self):
-        quiz_id = self.kwargs.get('quiz_id')
-        if not quiz_id:
-            return AnswerSubmission.objects.none()
-        
-        # Get all submissions for the quiz and annotate them to ensure distinct students
-        return AnswerSubmission.objects.filter(quiz_id=quiz_id).values('student').annotate(count=Count('student')).filter(count__gt=0)
+class StudentsByQuizView(APIView):
+    def get(self, request, quiz_id, *args, **kwargs):
+        # Filter AnswerSubmission based on quiz_id
+        submissions = AnswerSubmission.objects.filter(quiz_id=quiz_id).select_related('student')
+        students = {submission.student.id: submission.student for submission in submissions}
+        student_list = list(students.values())
+        serializer = StudentSerializer(student_list, many=True)
+        return Response(serializer.data)

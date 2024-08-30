@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import QuizSubmissionView
+from .views import StudentsByQuizView
 
 urlpatterns = [
-    path('answer_submissions/<int:quiz_id>/', QuizSubmissionView.as_view(), name='answer_submissions'),
+    path('quizzes/<int:quiz_id>/students/', StudentsByQuizView.as_view(), name='students-by-quiz'),
 ]
