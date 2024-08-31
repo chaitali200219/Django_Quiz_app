@@ -24,5 +24,6 @@ urlpatterns = [
     path('answer/',include('answer_submission.urls')),
     path('questions/', include('question_management.urls')),
     path('quiz/',include('quiz_management.urls')),
+    path('user/',include('user_management.urls')),
 
 ]
