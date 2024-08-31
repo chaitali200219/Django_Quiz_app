@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'answer_submission',
     'django_extensions',
     'rest_framework',
+ 
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
