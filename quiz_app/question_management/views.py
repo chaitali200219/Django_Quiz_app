@@ -4,6 +4,7 @@ from rest_framework import generics
 from .models import Questions,Tag
 from .serializers import QuestionsSerializer,TagSerializer
 
+
 class TeacherQuestionsListView(generics.ListAPIView):
     serializer_class = QuestionsSerializer
     # permission_classes = [IsAuthenticated]

@@ -27,7 +27,6 @@ urlpatterns = [
 
     path('user/', include('user_management.urls')),
 
-    path('user/',include('user_management.urls')),
-
+  
 
 ]
