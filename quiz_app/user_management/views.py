@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from .models import Teacher, Student
 from django.contrib.auth.hashers import make_password
 
+
 class TeacherRegisterView(APIView):
     permission_classes = [AllowAny]
 

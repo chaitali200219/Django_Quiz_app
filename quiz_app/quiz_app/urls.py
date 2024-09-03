@@ -25,5 +25,6 @@ urlpatterns = [
     path('questions/', include('question_management.urls')),
     path('quiz/',include('quiz_management.urls')),
     path('user/',include('user_management.urls')),
+    path('api-auth/',include('rest_framework.urls')),
 
 ]

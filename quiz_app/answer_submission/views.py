@@ -1,23 +1,24 @@
-from rest_framework.views import APIView
 from rest_framework import generics
-from rest_framework.response import Response
-from .models import AnswerSubmission
-from .serializers import StudentSerializer,  AnswerSubmissionSerializer
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+from .models import AnswerSubmission,Questions
+from .serializers import AnswerSubmissionSerializer
 
 
-class StudentsByQuizView(APIView):
-    def get(self, request, quiz_id, *args, **kwargs):
-        # Filter AnswerSubmission based on quiz_id
-        submissions = AnswerSubmission.objects.filter(quiz_id=quiz_id).select_related('student')
-        students = {submission.student.id: submission.student for submission in submissions}
-        student_list = list(students.values())
-        serializer = StudentSerializer(student_list, many=True)
-        return Response(serializer.data)
-    
+from django_filters.rest_framework import DjangoFilterBackend
+
 class AnswerSubmissionListCreateView(generics.ListCreateAPIView):
     queryset = AnswerSubmission.objects.all()
     serializer_class = AnswerSubmissionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['question']  # Allows filtering by question_id
 
-class AnswerSubmissionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = AnswerSubmission.objects.all()
-    serializer_class = AnswerSubmissionSerializer
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        question_id = self.request.data.get('question')
+        if question_id:
+            context['question'] = Questions.objects.get(id=question_id)
+        return context
+
+    def perform_create(self, serializer):
+        serializer.save()
