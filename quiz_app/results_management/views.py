@@ -1,52 +1,69 @@
 # results_management/views.py
 
-from rest_framework import generics
-from .models import QuizResult, QuestionResult, LeaderboardEntry
-from .serializers import QuizResultSerializer, QuestionResultSerializer, LeaderboardEntrySerializer
-from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from django.db.models import Sum
+from .models import QuizResult, LeaderboardEntry
+from .serializers import QuizResultSerializer, LeaderboardEntrySerializer
+from answer_submission.models import AnswerSubmission
+from user_management.models import Student
+from quiz_management.models import Quiz
+
+class SubmitQuizView(APIView):
+    """
+    This view handles the submission of quiz answers, calculates the result, and updates the leaderboard.
+    """
+    def post(self, request, *args, **kwargs):
+        student_id = request.data.get('student_id')
+        quiz_id = request.data.get('quiz_id')
+
+        # Retrieve the student and quiz objects
+        student = get_object_or_404(Student, id=student_id)
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+
+        # Create or update the QuizResult for this student and quiz
+        quiz_result, created = QuizResult.objects.get_or_create(student=student, quiz=quiz)
+
+        # Fetch all related submissions
+        submissions = AnswerSubmission.objects.filter(student=student, quiz=quiz, status='submitted')
+        correct_answers = submissions.filter(is_correct=True).count()
+
+        # Update the score based on correct answers
+        quiz_result.score = correct_answers
+        quiz_result.save()
+
+        # Update the leaderboard entry
+        leaderboard_entry, created = LeaderboardEntry.objects.get_or_create(student=student)
+        leaderboard_entry.update_total_score()
+
+        # Serialize and return the quiz result
+        serializer = QuizResultSerializer(quiz_result)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # View to list all quiz results or create a new quiz result
 class QuizResultListView(generics.ListCreateAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
 
-
 # View to retrieve, update, or delete a specific quiz result
 class QuizResultDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
 
-
-# View to list all question results or create a new question result
-class QuestionResultListView(generics.ListCreateAPIView):
-    queryset = QuestionResult.objects.all()
-    serializer_class = QuestionResultSerializer
-
-
-# View to retrieve, update, or delete a specific question result
-class QuestionResultDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = QuestionResult.objects.all()
-    serializer_class = QuestionResultSerializer
-
-
-# View to list leaderboard entries or create a new leaderboard entry
+# View to list leaderboard entries
 class LeaderboardEntryListView(generics.ListAPIView):
     queryset = LeaderboardEntry.objects.all()
     serializer_class = LeaderboardEntrySerializer
 
-
 # Custom API View to update leaderboard entries
 class UpdateLeaderboardView(APIView):
     def post(self, request, *args, **kwargs):
-        # Logic to update the leaderboard
         leaderboard_entries = LeaderboardEntry.objects.all()
-        # Logic to recalculate total scores and update leaderboard
+
         for entry in leaderboard_entries:
-            total_score = QuizResult.objects.filter(student=entry.student).aggregate(models.Sum('score'))['score__sum'] or 0
-            entry.total_score = total_score
-            entry.save()
+            entry.update_total_score()
 
         serializer = LeaderboardEntrySerializer(leaderboard_entries, many=True)
         return Response(serializer.data)
