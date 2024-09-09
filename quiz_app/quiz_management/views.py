@@ -7,7 +7,8 @@ from .permissions import IsTeacher,IsStudent
 
 class QuizListView(generics.ListAPIView):
     serializer_class = QuizSerializer
-    permission_classes=[IsStudent or  IsTeacher]
+    permission_classes = [IsStudent | IsTeacher]
+
 
     def get_queryset(self):
         """

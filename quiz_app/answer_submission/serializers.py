@@ -1,22 +1,24 @@
 from rest_framework import serializers
 from .models import AnswerSubmission
-from question_management.models import Option, Questions
+from user_management.models import Student
+from question_management.models import Questions,Option
+from quiz_management.models import Quiz
 
-class OptionSerializer(serializers.ModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Option
-        fields = ['id', 'content', 'is_correct']
+        model = Student
+        fields = "__all__"
+
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = "__all__"
 
 class AnswerSubmissionSerializer(serializers.ModelSerializer):
+    student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
     question = serializers.PrimaryKeyRelatedField(queryset=Questions.objects.all())
-    options = serializers.SerializerMethodField()  # To dynamically get options based on question
+    option = serializers.PrimaryKeyRelatedField(queryset=Option.objects.all())
 
     class Meta:
         model = AnswerSubmission
-        fields = ['quiz', 'student', 'option', 'question', 'is_correct', 'status', 'options']
-
-    def get_options(self, obj):
-        # Filter and return options related to the specific question
-        question = self.context.get('question') or obj.question
-        options = Option.objects.filter(question=question)
-        return OptionSerializer(options, many=True).data
+        fields = ['quiz', 'student', 'option', 'question', 'is_correct', 'status']
