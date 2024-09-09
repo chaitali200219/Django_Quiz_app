@@ -1,8 +1,8 @@
-# results_management/views.py
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.views import APIView
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from .models import QuizResult, LeaderboardEntry
@@ -11,10 +11,14 @@ from answer_submission.models import AnswerSubmission
 from user_management.models import Student
 from quiz_management.models import Quiz
 
+
 class SubmitQuizView(APIView):
     """
     This view handles the submission of quiz answers, calculates the result, and updates the leaderboard.
     """
+    permission_classes = [IsAuthenticated]  # Require authentication
+    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+
     def post(self, request, *args, **kwargs):
         student_id = request.data.get('student_id')
         quiz_id = request.data.get('quiz_id')
@@ -42,23 +46,36 @@ class SubmitQuizView(APIView):
         serializer = QuizResultSerializer(quiz_result)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 # View to list all quiz results or create a new quiz result
 class QuizResultListView(generics.ListCreateAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
+    permission_classes = [IsAuthenticated]  # Require authentication
+    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+
 
 # View to retrieve, update, or delete a specific quiz result
 class QuizResultDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
+    permission_classes = [IsAuthenticated]  # Require authentication
+    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+
 
 # View to list leaderboard entries
 class LeaderboardEntryListView(generics.ListAPIView):
     queryset = LeaderboardEntry.objects.all()
     serializer_class = LeaderboardEntrySerializer
+    permission_classes = [IsAuthenticated]  # Require authentication
+    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+
 
 # Custom API View to update leaderboard entries
 class UpdateLeaderboardView(APIView):
+    permission_classes = [IsAuthenticated]  # Require authentication
+    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+
     def post(self, request, *args, **kwargs):
         leaderboard_entries = LeaderboardEntry.objects.all()
 
