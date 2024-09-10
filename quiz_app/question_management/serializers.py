@@ -18,6 +18,7 @@ class QuestionsSerializer(serializers.ModelSerializer):
         options_data = validated_data.pop('options', [])
         tags_data = validated_data.pop('tags', [])
         question = super().create(validated_data)
+       
 
         # Create options for the question
         for option_data in options_data:
