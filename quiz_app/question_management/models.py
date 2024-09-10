@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from user_management.models import Teacher
 
 
 # Create your models here.
@@ -22,7 +23,8 @@ class Questions(models.Model):
     marks = models.PositiveIntegerField()
     # timestamp when the question was created
     created_at=models.DateTimeField(default=timezone.now)
-    
+    created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='questions',null=True)
+
     
     def __str__(self):
         return self.content
@@ -48,14 +50,10 @@ class Option(models.Model):
     
 
 
-# class Tag(models.Model):
-#     tag_id=models.AutoField(primary_key=True)
-#     # each tag realted to one question
-#     question=models.ForeignKey(Questions,on_delete=models.CASCADE,related_name='tags')
-#     tag_name=models.CharField(max_length=100)
-#     # type of question which is assocaited with teh tag
-#     question_type=models.CharField(max_length=50)
-    
-    
-#     def __str__(self):
-#         return self.tag_name
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+    questions = models.ManyToManyField(Questions, related_name='tags')
+
+    def __str__(self):
+        return self.name
