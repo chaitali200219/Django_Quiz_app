@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import make_password
 from .permissions import IsAdminOrTeacher, IsStudentOrTeacher
  
 
+
 class TeacherRegisterView(APIView):
     permission_classes = [AllowAny]
 

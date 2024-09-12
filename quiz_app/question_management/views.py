@@ -3,11 +3,16 @@ from rest_framework import generics
 # from rest_framework.permissions import IsAuthenticated
 from .models import Questions,Tag
 from .serializers import QuestionsSerializer,TagSerializer
+from user_management.models import Teacher
 
+<<<<<<< HEAD
 
+=======
+from .permissions import IsTeacher, IsStudent
+>>>>>>> 0d6686cf2341ceb701c1b7bb99a1a021cfb328a7
 class TeacherQuestionsListView(generics.ListAPIView):
     serializer_class = QuestionsSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher]
 
     def get_queryset(self):
         """
@@ -18,6 +23,7 @@ class TeacherQuestionsListView(generics.ListAPIView):
     
 class AllQuestionsListView(generics.ListAPIView):
     serializer_class = QuestionsSerializer
+    permission_classes=[IsTeacher]
 
     def get_queryset(self):
         """
@@ -27,21 +33,37 @@ class AllQuestionsListView(generics.ListAPIView):
 
 class QuestionCreateView(generics.CreateAPIView):
     serializer_class = QuestionsSerializer
+    permission_classes=[IsTeacher]
+    
+    def perform_create(self, serializer):
+        user = self.request.user  # Get the authenticated user
+        try:
+            # Retrieve the Teacher instance related to this user
+            teacher = Teacher.objects.get(user=user)
+        except Teacher.DoesNotExist:
+            raise ValidationError("The authenticated user is not a registered teacher.")
+        
+        # Save the question with the correct teacher
+        serializer.save(created_by=teacher)
 
 class QuestionUpdateView(generics.UpdateAPIView):
     queryset = Questions.objects.all()
     serializer_class = QuestionsSerializer
+    permission_classes=[IsTeacher]
 
 class QuestionDeleteView(generics.DestroyAPIView):
     queryset = Questions.objects.all()
     serializer_class = QuestionsSerializer   
+    permission_classes=[IsTeacher]
     
 # List all tags or create a new tag
 class TagListCreateView(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes=[IsTeacher]
 
 # Retrieve, update or delete a specific tag
 class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer     
+    permission_classes=[IsTeacher]
