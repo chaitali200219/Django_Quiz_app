@@ -4,6 +4,7 @@ from .views import TeacherQuestionsListView,AllQuestionsListView,QuestionCreateV
 urlpatterns = [
     # question urls
     path('teachers/<int:teacher_id>/questions/', TeacherQuestionsListView.as_view(), name='teacher-questions-list'),
+    
     path('teachers/allquestions/',AllQuestionsListView.as_view(),name="questions"),
     path('questions/create/', QuestionCreateView.as_view(), name='question-create'),
     path('questions/<int:pk>/update/', QuestionUpdateView.as_view(), name='question-update'),

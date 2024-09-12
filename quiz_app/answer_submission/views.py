@@ -24,5 +24,9 @@ class AnswerSubmissionListCreateView(generics.ListCreateAPIView):
 
 # View for retrieving, updating, and deleting a specific answer submission
 class AnswerSubmissionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = AnswerSubmission.objects.all()
     serializer_class = AnswerSubmissionSerializer
+
+    # Dynamically filter the queryset based on student_id
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')  # Get the primary key from the URL
+        return AnswerSubmission.objects.filter(pk=pk)
