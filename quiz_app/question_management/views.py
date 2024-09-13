@@ -43,10 +43,7 @@ class QuestionCreateView(generics.CreateAPIView):
         # Save the question with the correct teacher
         serializer.save(created_by=teacher)
 
-class QuestionDetailView(generics.RetrieveAPIView):
-    queryset = Questions.objects.all()
-    serializer_class = QuestionsSerializer
-    permission_classes = [IsTeacher]
+
 
 
 class QuestionDetailView(generics.RetrieveAPIView):

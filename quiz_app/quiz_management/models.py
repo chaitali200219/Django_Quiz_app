@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from user_management.models import Teacher
 
+
 class Quiz(models.Model):
     STATUS_CHOICES = [
         (True, _('Active')),
