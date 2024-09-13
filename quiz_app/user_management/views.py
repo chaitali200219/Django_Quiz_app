@@ -89,7 +89,14 @@ class LoginView(APIView):
                             status=status.HTTP_401_UNAUTHORIZED)
 
         refresh = RefreshToken.for_user(user)
+        
+        # Check if the user is a teacher and fetch the teacher_id if applicable
+        teacher_id = None
+        if hasattr(user, 'teacher'):
+            teacher_id = user.teacher.id
+
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-        }, status=status.HTTP_200_OK)        
+            'teacher_id': teacher_id  # Include teacher_id in the response
+        }, status=status.HTTP_200_OK)

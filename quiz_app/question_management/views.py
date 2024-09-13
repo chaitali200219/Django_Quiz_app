@@ -4,6 +4,7 @@ from rest_framework import generics
 from .models import Questions,Tag
 from .serializers import QuestionsSerializer,TagSerializer
 from user_management.models import Teacher
+from rest_framework.exceptions import ValidationError
 
 from .permissions import IsTeacher, IsStudent
 class TeacherQuestionsListView(generics.ListAPIView):
@@ -41,6 +42,18 @@ class QuestionCreateView(generics.CreateAPIView):
         
         # Save the question with the correct teacher
         serializer.save(created_by=teacher)
+
+class QuestionDetailView(generics.RetrieveAPIView):
+    queryset = Questions.objects.all()
+    serializer_class = QuestionsSerializer
+    permission_classes = [IsTeacher]
+
+
+class QuestionDetailView(generics.RetrieveAPIView):
+    queryset = Questions.objects.all()
+    serializer_class = QuestionsSerializer
+    permission_classes = [IsTeacher]
+        
 
 class QuestionUpdateView(generics.UpdateAPIView):
     queryset = Questions.objects.all()
