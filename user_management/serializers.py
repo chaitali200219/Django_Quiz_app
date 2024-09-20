@@ -8,6 +8,8 @@ class TeacherSerializer(serializers.ModelSerializer):
         fields = ['experience_years']
 
 class StudentSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)  # Assuming user is linked
+   
     class Meta:
         model = Student
-        fields = ['grade']
+        fields = ('id', 'username','grade')

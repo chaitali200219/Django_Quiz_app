@@ -5,6 +5,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from .views import StudentListView
+
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -21,6 +23,10 @@ urlpatterns = [
     
     # Logout (common for both teachers and students)
     path('api/logout/', views.LogoutView.as_view(), name='logout'),
+    
+    
+    path('students/id/<str:username>/', views.get_student_id, name='get_student_id'),#new
+    path('students/', StudentListView.as_view(), name='student-list'),
     
 
 ]

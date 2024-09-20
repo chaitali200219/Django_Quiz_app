@@ -8,7 +8,25 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from .models import Teacher, Student
 from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from rest_framework import generics
 
+#new
+def get_student_id(request, username):
+    try:
+        # Get the student using the username
+        student = Student.objects.get(user__username=username)
+        return JsonResponse({'student_id': student.id})
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    
+
+class StudentListView(generics.ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    
+    
 
 class TeacherRegisterView(APIView):
     permission_classes = [AllowAny]
@@ -89,7 +107,14 @@ class LoginView(APIView):
                             status=status.HTTP_401_UNAUTHORIZED)
 
         refresh = RefreshToken.for_user(user)
+        
+        # Check if the user is a teacher or a student and fetch the respective ID
+        teacher_id = user.teacher.id if hasattr(user, 'teacher') else None
+        student_id = user.student.id if hasattr(user, 'student') else None
+
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-        }, status=status.HTTP_200_OK)        
+            'teacher_id': teacher_id,
+            'student_id': student_id
+        }, status=status.HTTP_200_OK)
