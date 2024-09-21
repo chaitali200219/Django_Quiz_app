@@ -1,5 +1,3 @@
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -11,13 +9,12 @@ from answer_submission.models import AnswerSubmission
 from user_management.models import Student
 from quiz_management.models import Quiz
 
-
 class SubmitQuizView(APIView):
     """
     This view handles the submission of quiz answers, calculates the result, and updates the leaderboard.
     """
-    permission_classes = [IsAuthenticated]  # Require authentication
-    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+    # permission_classes = [IsAuthenticated]  # Require authentication
+    # authentication_classes = [JWTAuthentication]  # Use JWT Authentication
 
     def post(self, request, *args, **kwargs):
         student_id = request.data.get('student_id')
@@ -51,30 +48,23 @@ class SubmitQuizView(APIView):
 class QuizResultListView(generics.ListCreateAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
-    permission_classes = [IsAuthenticated]  # Require authentication
-    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
-
+    # Removed permission_classes and authentication_classes
 
 # View to retrieve, update, or delete a specific quiz result
 class QuizResultDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = QuizResult.objects.all()
     serializer_class = QuizResultSerializer
-    permission_classes = [IsAuthenticated]  # Require authentication
-    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
-
+    # Removed permission_classes and authentication_classes
 
 # View to list leaderboard entries
 class LeaderboardEntryListView(generics.ListAPIView):
     queryset = LeaderboardEntry.objects.all()
     serializer_class = LeaderboardEntrySerializer
-    permission_classes = [IsAuthenticated]  # Require authentication
-    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
-
+    # Removed permission_classes and authentication_classes
 
 # Custom API View to update leaderboard entries
 class UpdateLeaderboardView(APIView):
-    permission_classes = [IsAuthenticated]  # Require authentication
-    authentication_classes = [JWTAuthentication]  # Use JWT Authentication
+    # Removed permission_classes and authentication_classes
 
     def post(self, request, *args, **kwargs):
         leaderboard_entries = LeaderboardEntry.objects.all()

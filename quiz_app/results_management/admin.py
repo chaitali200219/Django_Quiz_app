@@ -5,7 +5,7 @@ from .models import QuizResult, LeaderboardEntry
 
 @admin.register(QuizResult)
 class QuizResultAdmin(admin.ModelAdmin):
-    list_display = ('student', 'quiz', 'score', 'date_taken')
+    list_display = ('student', 'quiz', 'score', 'date_taken')  # Ensure 'date_taken' is a valid field
     readonly_fields = ('score',)
 
     def save_model(self, request, obj, form, change):
@@ -15,7 +15,7 @@ class QuizResultAdmin(admin.ModelAdmin):
 
 @admin.register(LeaderboardEntry)
 class LeaderboardEntryAdmin(admin.ModelAdmin):
-    list_display = ('student', 'total_score', 'last_updated')
+    list_display = ('student', 'total_score', 'last_updated')  # Ensure 'last_updated' is a valid field
     readonly_fields = ('total_score',)
 
     def save_model(self, request, obj, form, change):

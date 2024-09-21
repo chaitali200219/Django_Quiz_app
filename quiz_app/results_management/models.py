@@ -11,10 +11,10 @@ from question_management.models import Questions, Option
 from answer_submission.models import AnswerSubmission  # Import AnswerSubmission model
 
 class QuizResult(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='quiz_results')
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='results')
-    score = models.FloatField(default=0.0)  # Default score is set to 0
-    date_taken = models.DateTimeField(auto_now_add=True)
+    student = models.ForeignKey('user_management.Student', on_delete=models.CASCADE)
+    quiz = models.ForeignKey('quiz_management.Quiz', on_delete=models.CASCADE)
+    score = models.FloatField(default=0)
+    date_taken = models.DateTimeField(default=timezone.now)
 
     def calculate_score(self):
         submissions = AnswerSubmission.objects.filter(student=self.student, quiz=self.quiz, status='submitted')
@@ -23,7 +23,6 @@ class QuizResult(models.Model):
 
     def __str__(self):
         return f"{self.student.user.username} - {self.quiz.title} - Score: {self.score}"
-
     class Meta:
         unique_together = ('student', 'quiz')
         verbose_name = 'Quiz Result'
