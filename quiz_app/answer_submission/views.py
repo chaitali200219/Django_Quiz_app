@@ -45,6 +45,10 @@ class StudentsByQuizView(APIView):
 class AnswerSubmissionListCreateView(generics.ListCreateAPIView):
     queryset = AnswerSubmission.objects.all()
     serializer_class = AnswerSubmissionSerializer
+
+    def perform_create(self, serializer):
+        # Automatically set the student_id from the request
+        serializer.save(student_id=self.request.data.get('student_id'))
         
 # View for retrieving, updating, and deleting a specific answer submission
 class AnswerSubmissionDetailView(generics.RetrieveUpdateDestroyAPIView):
