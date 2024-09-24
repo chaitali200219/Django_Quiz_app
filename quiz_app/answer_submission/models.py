@@ -1,11 +1,12 @@
 from django.db import models
 from quiz_management.models import Quiz
-from user_management.models import Student
+from user_management.models import Student, Teacher
 from question_management.models import Option, Questions
 
 class AnswerSubmission(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='submissions')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='submissions')
+    teacher = models.ForeignKey(Teacher, null=True, blank=True, on_delete=models.CASCADE)
     question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='submissions',default=1)
     option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name='submissions')
     
